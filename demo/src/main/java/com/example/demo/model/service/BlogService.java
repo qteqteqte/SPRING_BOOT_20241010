@@ -1,8 +1,8 @@
 package com.example.demo.model.service;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.*;
 
 import com.example.demo.model.domain.Board;
 import com.example.demo.model.repository.BoardRepository;
@@ -19,6 +19,20 @@ public class BlogService {
     public Optional<Board> findById(Long id) { // 게시판 특정 글 조회
         return blogRepository.findById(id);
     }
+
+    public Board save(AddArticleRequest request){
+        // DTO가 없는 경우 이곳에 직접 구현 가능
+        return blogRepository.save(request.toEntity());
+    }
+
+    public Page<Board> findAll(Pageable pageable) {
+        return blogRepository.findAll(pageable);
+    }
+    
+    public Page<Board> searchByKeyword(String keyword, Pageable pageable) {
+        return blogRepository.findByTitleContainingIgnoreCase(keyword, pageable);
+    } // LIKE 검색 제공(대소문자 무시)
+
 
     // @Autowired // 객체 주입 자동화, 생성자 1개면 생략 가능
     // private final BlogRepository blogRepository; // 리포지토리 선언
